@@ -65,6 +65,33 @@ const packages = [
     stars: 37,
     updated: '2024-01-09',
     author: 'VG Team'
+  },
+  {
+    name: 'SQLiteLib',
+    description: 'SQLite database operations and management',
+    version: '1.0.0',
+    downloads: 3200,
+    stars: 12,
+    updated: '2024-01-16',
+    author: 'Hussein Abdul-Ameer'
+  },
+  {
+    name: 'Guilibrary',
+    description: 'Complete GUI framework with windows, buttons, images, and animations',
+    version: '2.0.0',
+    downloads: 8900,
+    stars: 67,
+    updated: '2024-01-17',
+    author: 'Hussein Abdul-Ameer'
+  },
+  {
+    name: 'RegexLib',
+    description: 'Regular expression pattern matching and string manipulation',
+    version: '1.0.0',
+    downloads: 2100,
+    stars: 8,
+    updated: '2024-01-13',
+    author: 'Hussein Abdul-Ameer'
   }
 ]
 
