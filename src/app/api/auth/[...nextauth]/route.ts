@@ -39,15 +39,19 @@ const handler = NextAuth({
           return null
         }
 
-        const result = await UserService.authenticateUser(credentials.username, credentials.password)
-        
-        if (result.success && result.user) {
-          return {
-            id: result.user._id?.toString() || result.user.username,
-            username: result.user.username,
-            email: result.user.email,
-            packages: result.user.packages || []
+        try {
+          const result = await UserService.authenticateUser(credentials.username, credentials.password)
+          
+          if (result.success && result.user) {
+            return {
+              id: result.user._id?.toString() || result.user.username,
+              username: result.user.username,
+              email: result.user.email,
+              packages: result.user.packages || []
+            }
           }
+        } catch (error) {
+          console.error('Authentication error:', error)
         }
         
         return null
@@ -55,7 +59,8 @@ const handler = NextAuth({
     })
   ],
   session: {
-    strategy: 'jwt'
+    strategy: 'jwt',
+    maxAge: 24 * 60 * 60, // 24 hours
   },
   callbacks: {
     async jwt({ token, user }) {
@@ -75,7 +80,8 @@ const handler = NextAuth({
   },
   pages: {
     signIn: '/auth/signin'
-  }
+  },
+  secret: process.env.NEXTAUTH_SECRET
 })
 
 export { handler as GET, handler as POST } 
