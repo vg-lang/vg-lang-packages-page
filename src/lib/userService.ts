@@ -33,7 +33,7 @@ export class UserService {
         return { success: false, error: 'Email already exists' }
       }
 
-      // Hash password with bcrypt (same as CLI)
+      // Hash password with bcrypt
       const hashedPassword = await bcrypt.hash(password, 10)
 
       const newUser: User = {
@@ -44,9 +44,10 @@ export class UserService {
       }
 
       await users.insertOne(newUser)
+      console.log(`✅ User created: ${username}`)
       return { success: true }
     } catch (error) {
-      console.error('Error creating user:', error)
+      console.error('❌ Error creating user:', error)
       return { success: false, error: 'Internal server error' }
     }
   }
@@ -75,9 +76,10 @@ export class UserService {
 
       // Return user without password
       const { password: _, ...userWithoutPassword } = user
+      console.log(`✅ User authenticated: ${username}`)
       return { success: true, user: userWithoutPassword }
     } catch (error) {
-      console.error('Error authenticating user:', error)
+      console.error('❌ Error authenticating user:', error)
       return { success: false, error: 'Internal server error' }
     }
   }
@@ -95,7 +97,7 @@ export class UserService {
       }
       return null
     } catch (error) {
-      console.error('Error getting user:', error)
+      console.error('❌ Error getting user:', error)
       return null
     }
   }
@@ -111,9 +113,53 @@ export class UserService {
         return { success: false, error: 'User not found' }
       }
 
+      console.log(`✅ User deleted: ${username}`)
       return { success: true }
     } catch (error) {
-      console.error('Error deleting user:', error)
+      console.error('❌ Error deleting user:', error)
+      return { success: false, error: 'Internal server error' }
+    }
+  }
+
+  static async getAllUsers(): Promise<User[]> {
+    try {
+      const client = await clientPromise
+      const db = client.db(DATABASE_NAME)
+      const users = db.collection(USERS_COLLECTION)
+
+      const allUsers = await users.find({}).toArray()
+      return allUsers.map(user => {
+        const { password, ...userWithoutPassword } = user
+        return userWithoutPassword as User
+      })
+    } catch (error) {
+      console.error('❌ Error getting all users:', error)
+      return []
+    }
+  }
+
+  static async updateUser(username: string, updates: Partial<User>): Promise<{ success: boolean; error?: string }> {
+    try {
+      const client = await clientPromise
+      const db = client.db(DATABASE_NAME)
+      const users = db.collection(USERS_COLLECTION)
+
+      // Remove password from updates if present
+      const { password, ...safeUpdates } = updates
+
+      const result = await users.updateOne(
+        { username },
+        { $set: safeUpdates }
+      )
+
+      if (result.matchedCount === 0) {
+        return { success: false, error: 'User not found' }
+      }
+
+      console.log(`✅ User updated: ${username}`)
+      return { success: true }
+    } catch (error) {
+      console.error('❌ Error updating user:', error)
       return { success: false, error: 'Internal server error' }
     }
   }
