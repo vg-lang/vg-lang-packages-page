@@ -1,7 +1,7 @@
-import { Search, Package, Download, Star, Calendar } from 'lucide-react'
+import { Search, Package, Download, Star, Calendar, Globe, Upload, Users } from 'lucide-react'
 import Link from 'next/link'
 
-// Mock package data
+// Mock package data with sources
 const packages = [
   {
     name: 'Arrays',
@@ -10,7 +10,8 @@ const packages = [
     downloads: 15420,
     stars: 45,
     updated: '2024-01-15',
-    author: 'VG Team'
+    author: 'VG Team',
+    source: 'official'
   },
   {
     name: 'DateTime',
@@ -19,7 +20,8 @@ const packages = [
     downloads: 8920,
     stars: 32,
     updated: '2024-01-10',
-    author: 'VG Team'
+    author: 'VG Team',
+    source: 'official'
   },
   {
     name: 'IO',
@@ -28,7 +30,8 @@ const packages = [
     downloads: 12340,
     stars: 28,
     updated: '2024-01-12',
-    author: 'VG Team'
+    author: 'VG Team',
+    source: 'official'
   },
   {
     name: 'Mathlib',
@@ -37,7 +40,8 @@ const packages = [
     downloads: 9870,
     stars: 41,
     updated: '2024-01-08',
-    author: 'VG Team'
+    author: 'VG Team',
+    source: 'official'
   },
   {
     name: 'OsLib',
@@ -46,7 +50,8 @@ const packages = [
     downloads: 6540,
     stars: 19,
     updated: '2024-01-14',
-    author: 'VG Team'
+    author: 'VG Team',
+    source: 'official'
   },
   {
     name: 'Random',
@@ -55,7 +60,8 @@ const packages = [
     downloads: 5430,
     stars: 15,
     updated: '2024-01-11',
-    author: 'VG Team'
+    author: 'VG Team',
+    source: 'official'
   },
   {
     name: 'Util',
@@ -64,7 +70,8 @@ const packages = [
     downloads: 11230,
     stars: 37,
     updated: '2024-01-09',
-    author: 'VG Team'
+    author: 'VG Team',
+    source: 'official'
   },
   {
     name: 'SQLiteLib',
@@ -73,7 +80,8 @@ const packages = [
     downloads: 3200,
     stars: 12,
     updated: '2024-01-16',
-    author: 'Hussein Abdul-Ameer'
+    author: 'Hussein Abdul-Ameer',
+    source: 'community'
   },
   {
     name: 'Guilibrary',
@@ -82,7 +90,8 @@ const packages = [
     downloads: 8900,
     stars: 67,
     updated: '2024-01-17',
-    author: 'Hussein Abdul-Ameer'
+    author: 'Hussein Abdul-Ameer',
+    source: 'community'
   },
   {
     name: 'RegexLib',
@@ -91,7 +100,49 @@ const packages = [
     downloads: 2100,
     stars: 8,
     updated: '2024-01-13',
-    author: 'Hussein Abdul-Ameer'
+    author: 'Hussein Abdul-Ameer',
+    source: 'community'
+  },
+  {
+    name: 'NetworkLib',
+    description: 'Network communication and HTTP client utilities',
+    version: '0.9.0',
+    downloads: 1200,
+    stars: 5,
+    updated: '2024-01-18',
+    author: 'Community Developer',
+    source: 'experimental'
+  },
+  {
+    name: 'CryptoLib',
+    description: 'Cryptographic functions and security utilities',
+    version: '0.8.0',
+    downloads: 800,
+    stars: 3,
+    updated: '2024-01-19',
+    author: 'Security Developer',
+    source: 'experimental'
+  }
+]
+
+const sources = [
+  {
+    name: 'official',
+    description: 'Official VG Language packages maintained by the core team',
+    packages: 7,
+    url: 'https://raw.githubusercontent.com/Husseinabdulameer11/vg-lang-packagemanager/main/packages.json'
+  },
+  {
+    name: 'community',
+    description: 'Community-contributed packages from trusted developers',
+    packages: 3,
+    url: 'https://raw.githubusercontent.com/Husseinabdulameer11/vg-lang-community-packages/main/packages.json'
+  },
+  {
+    name: 'experimental',
+    description: 'Experimental packages for testing and early adoption',
+    packages: 2,
+    url: 'https://raw.githubusercontent.com/Husseinabdulameer11/vg-lang-experimental/main/packages.json'
   }
 ]
 
@@ -128,7 +179,7 @@ export default function PackagesHome() {
             VG Packages
           </h1>
           <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto">
-            Discover and install packages for the VG Language ecosystem.
+            Discover and install packages from multiple sources in the VG Language ecosystem.
           </p>
           
           {/* Search Bar */}
@@ -145,8 +196,41 @@ export default function PackagesHome() {
         </div>
       </div>
 
+      {/* Package Sources Section */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-white mb-4">Package Sources</h2>
+          <p className="text-gray-300 max-w-2xl mx-auto">
+            Packages are distributed through multiple sources. Each source maintains its own packages.json file.
+          </p>
+        </div>
+        
+        <div className="grid md:grid-cols-3 gap-6 mb-16">
+          {sources.map((source) => (
+            <div key={source.name} className="bg-gray-800 p-6 rounded-xl border border-gray-700 hover:border-yellow-500 transition-colors">
+              <div className="flex items-center space-x-3 mb-4">
+                <Globe className="w-6 h-6 text-yellow-400" />
+                <h3 className="text-lg font-semibold text-white capitalize">{source.name}</h3>
+              </div>
+              <p className="text-gray-300 mb-4 text-sm">
+                {source.description}
+              </p>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-400">{source.packages} packages</span>
+                <span className="text-xs text-gray-500 font-mono">{source.url.split('/').slice(-2).join('/')}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Packages Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-white mb-4">All Packages</h2>
+          <p className="text-gray-300">Packages from all registered sources</p>
+        </div>
+        
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {packages.map((pkg) => (
             <div key={pkg.name} className="bg-gray-800 p-6 rounded-xl border border-gray-700 hover:border-yellow-500 transition-colors">
@@ -155,9 +239,14 @@ export default function PackagesHome() {
                   <Package className="w-5 h-5 text-yellow-400" />
                   <h3 className="text-lg font-semibold text-white">{pkg.name}</h3>
                 </div>
-                <span className="text-xs bg-yellow-500 text-gray-900 px-2 py-1 rounded-full font-semibold">
-                  v{pkg.version}
-                </span>
+                <div className="flex flex-col items-end space-y-1">
+                  <span className="text-xs bg-yellow-500 text-gray-900 px-2 py-1 rounded-full font-semibold">
+                    v{pkg.version}
+                  </span>
+                  <span className="text-xs bg-gray-600 text-gray-300 px-2 py-1 rounded-full capitalize">
+                    {pkg.source}
+                  </span>
+                </div>
               </div>
               
               <p className="text-gray-300 mb-4 text-sm">
@@ -192,13 +281,71 @@ export default function PackagesHome() {
         </div>
       </div>
 
+      {/* Publish Section */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="bg-gray-800 rounded-xl border border-gray-700 p-8">
+          <div className="text-center mb-8">
+            <Upload className="w-12 h-12 text-yellow-400 mx-auto mb-4" />
+            <h2 className="text-3xl font-bold text-white mb-4">Publish Your Packages</h2>
+            <p className="text-gray-300 max-w-2xl mx-auto">
+              Create your own package source and share your VG libraries with the community.
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-8">
+            <div>
+              <h3 className="text-xl font-semibold text-white mb-4">How to Publish</h3>
+              <div className="space-y-4 text-gray-300">
+                <div className="flex items-start space-x-3">
+                  <span className="bg-yellow-500 text-gray-900 w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold">1</span>
+                  <p>Create a packages.json file with your package information</p>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <span className="bg-yellow-500 text-gray-900 w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold">2</span>
+                  <p>Host it on GitHub, your website, or any public URL</p>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <span className="bg-yellow-500 text-gray-900 w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold">3</span>
+                  <p>Use <code className="bg-gray-700 px-2 py-1 rounded">vgpkg publish &lt;JsonUrl&gt;</code> to register your source</p>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <span className="bg-yellow-500 text-gray-900 w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold">4</span>
+                  <p>Users can now install your packages with <code className="bg-gray-700 px-2 py-1 rounded">vgpkg install &lt;PackageName&gt;</code></p>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <h3 className="text-xl font-semibold text-white mb-4">Package JSON Format</h3>
+              <div className="bg-gray-900 p-4 rounded-lg">
+                <pre className="text-sm text-gray-300 overflow-x-auto">
+{`{
+  "packages": [
+    {
+      "name": "MyLibrary",
+      "filename": "MyLibrary.vglib",
+      "url": "https://github.com/user/repo/releases/latest/download/MyLibrary.vglib",
+      "latest": "1.0.0",
+      "versions": {
+        "1.0.0": "https://github.com/user/repo/releases/latest/download/MyLibrary.vglib"
+      }
+    }
+  ]
+}`}
+                </pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Stats Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="bg-gray-800 rounded-xl border border-gray-700 p-8">
           <h2 className="text-2xl font-bold text-white mb-6">Package Registry Stats</h2>
           <div className="grid md:grid-cols-4 gap-8">
             <div className="text-center">
-              <div className="text-3xl font-bold text-yellow-400 mb-2">7</div>
+              <div className="text-3xl font-bold text-yellow-400 mb-2">12</div>
               <div className="text-gray-300">Total Packages</div>
             </div>
             <div className="text-center">
@@ -210,8 +357,8 @@ export default function PackagesHome() {
               <div className="text-gray-300">Total Stars</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-yellow-400 mb-2">1</div>
-              <div className="text-gray-300">Active Maintainers</div>
+              <div className="text-3xl font-bold text-yellow-400 mb-2">3</div>
+              <div className="text-gray-300">Package Sources</div>
             </div>
           </div>
         </div>
@@ -224,7 +371,7 @@ export default function PackagesHome() {
             <div>
               <div className="text-2xl font-bold text-yellow-400 mb-4">VG Packages</div>
               <p className="text-gray-300">
-                The official package registry for VG Language.
+                The decentralized package registry for VG Language.
               </p>
             </div>
             <div>
@@ -239,8 +386,8 @@ export default function PackagesHome() {
               <h3 className="text-white font-semibold mb-4">Developers</h3>
               <ul className="space-y-2 text-gray-300">
                 <li><Link href="#" className="hover:text-yellow-400 transition-colors">Publish Package</Link></li>
-                <li><Link href="#" className="hover:text-yellow-400 transition-colors">API</Link></li>
-                <li><Link href="#" className="hover:text-yellow-400 transition-colors">CLI</Link></li>
+                <li><Link href="#" className="hover:text-yellow-400 transition-colors">CLI Documentation</Link></li>
+                <li><Link href="#" className="hover:text-yellow-400 transition-colors">Package Format</Link></li>
               </ul>
             </div>
             <div>
